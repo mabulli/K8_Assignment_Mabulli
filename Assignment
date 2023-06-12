@@ -1,0 +1,147 @@
+=====================
+
+1. go to root (cd $home )
+2. git clone https://github.com/ashishrpandey/example-voting-app
+
+
+[root@ip-172-31-15-198 ~]# git clone https://github.com/ashishrpandey/example-voting-app
+Cloning into 'example-voting-app'...
+remote: Enumerating objects: 494, done.
+remote: Total 494 (delta 0), reused 0 (delta 0), pack-reused 494
+Receiving objects: 100% (494/494), 236.18 KiB | 12.43 MiB/s, done.
+Resolving deltas: 100% (179/179), done.
+[root@ip-172-31-15-198 ~]# ls
+example-voting-app  firstchart  get_helm.sh  hello.py  hi.py  kubernetes-training
+
+
+3. cd /root/example-voting-app/k8s-specifications
+[root@ip-172-31-15-198 ~]# cd  /root/example-voting-app/k8s-specifications
+
+4. kubectl apply -f .
+[root@ip-172-31-15-198 k8s-specifications]# kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+
+
+================
+
+[root@ip-172-31-15-198 k8s-specifications]# kubectl get namespace
+NAME              STATUS   AGE
+default           Active   7d5h
+kube-node-lease   Active   7d5h
+kube-public       Active   7d5h
+kube-system       Active   7d5h
+mabu              Active   6d3h
+mabul             Active   4d5h
+mabulli           Active   5d23h
+mabulli2          Active   5d5h
+[root@ip-172-31-15-198 k8s-specifications]# kubectl get po
+NAME                                   READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-25rxf                     1/1     Running   0          4m23s
+firstapp1-firstchart-cc9658d44-jxjcd   1/1     Running   0          3h29m
+redis-868d64d78-xpwcq                  1/1     Running   0          4m23s
+result-5d57b59f4b-hhxrk                1/1     Running   0          4m23s
+secondapp-firstchart-6774b8945-22n4l   1/1     Running   0          3h17m
+secondapp-mysql-0                      0/1     Pending   0          3h17m
+vote-94849dc97-4r8cw                   1/1     Running   0          4m23s
+worker-dd46d7584-8xslm                 1/1     Running   0          4m23s
+
+5. for voting and result pods, Observe that NodePort is assigned.
+[root@ip-172-31-15-198 k8s-specifications]# kubectl get svc
+NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+db                         ClusterIP   10.97.220.224    <none>        5432/TCP         5m18s
+firstapp1-firstchart       ClusterIP   10.110.72.48     <none>        80/TCP           3h30m
+redis                      ClusterIP   10.111.195.87    <none>        6379/TCP         5m18s
+result                     NodePort    10.105.161.144   <none>        5001:31001/TCP   5m18s
+secondapp-firstchart       ClusterIP   10.111.139.96    <none>        80/TCP           3h18m
+secondapp-mysql            ClusterIP   10.102.148.171   <none>        3306/TCP         3h18m
+secondapp-mysql-headless   ClusterIP   None             <none>        3306/TCP         3h18m
+vote                       NodePort    10.110.108.180   <none>        5000:31000/TCP   5m18s
+[root@ip-172-31-15-198 k8s-specifications]#
+
+
+==============
+
+6. take your publicIP (your instance IP) : NodePort ► open 2 browsers , one for VOTING and one for Results-->>Fine
+
+7.try voting and see the results paralelly in results page.-->>Fine
+
+8.Now try to delete the Pods one by one (first voting Pod, then worker pod, then db pod) and see what happens to the voting and result app after deleting.
+
+
+[root@ip-172-31-15-198 ~]# kubectl delete po vote-94849dc97-4r8cw
+pod "vote-94849dc97-4r8cw" deleted
+[root@ip-172-31-15-198 ~]#
+==============
+
+[root@ip-172-31-15-198 ~]# kubectl delete po worker-dd46d7584-8xslm
+pod "worker-dd46d7584-8xslm" deleted
+[root@ip-172-31-15-198 ~]#
+=============
+
+[root@ip-172-31-15-198 ~]# kubectl delete po db-b54cd94f4-25rxf
+pod "db-b54cd94f4-25rxf" deleted
+[root@ip-172-31-15-198 ~]#
+
+======================
+
+Observation:
+	After Deleting Vote pod Still Voting and Result app accessible 
+	After Deleting Worker pod Still Voting and Result app accessible
+	After Deleting DB pod Still Voting and Result app accessible
+Commands Used:
+	1. go to root (cd $home )
+
+	2. git clone https://github.com/ashishrpandey/example-voting-app
+
+	3. cd  /root/example-voting-app/k8s-specifications
+
+	4. kubectl apply -f .
+Understood The topics during training:
+	Installed docker,
+	Created container and Ubuntu image from docker registry,
+	Start and stop Container, 
+	Removed container,
+	Removed multiple container,
+	Installed Utilities  and packages inside container
+        Container storage exercise 
+      	Tagging container
+	Pulled and pushes docker images from and to docker hub
+      	created docker file 
+      	LAYERING on docker 
+	Monolithic Architecture 
+      	Micro services 
+      	Kubernets master and worker node concept 
+	Created and executed the yaml file
+      	Deployed an app on the cluster
+      	Created the replicationcontroller
+      	created the replicaset
+      	Scaling replicationcontroller and replicaset
+      	Created, modified and removed labels to pods
+      	Created and assigned pod to namespaces
+      	Daemon set
+	Created Daemon set and assigned labels to the pods.
+      	Created Jobs
+      	created Batch jobs 
+      	created Cron Jobs
+      	Created service 
+      	Created Nodeport 
+      	Created Load Balancer 
+      	Created deployment file and executed 
+	Created Rolling Updates in deployment 
+        Rolling Out in Deployment
+        Kubernetes is stateless application
+        created sidecar container 
+        Created HOSTPATH volume
+        Created Gitrepository as volume
+        Created Persistence volume
+        created persistence volume claim  
+	Statefullset
+	Helm chart
